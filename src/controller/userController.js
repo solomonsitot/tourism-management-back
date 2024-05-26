@@ -90,12 +90,11 @@ module.exports.logout = async (req, res) => {
     sameSite: "none",
     secure: true,
   });
-  res
-    .json({
-      message: "logged out successfully",
-    })
-    .status(200);
+  res.status(200).json({
+    message: "logged out successfully",
+  });
 };
+
 
 module.exports.changePassword = async (req, res) => {
   try {
@@ -357,8 +356,10 @@ module.exports.getSingleUser = async (req, res) => {
 module.exports.searchHotel = async (req, res) => {
   try {
     const { key } = req.params;
+    const hotel = await User.find({ role: "hotel manager" }).select("_id");
     const hotels = await ProviderProfile.find({
       company_name: { $regex: new RegExp(key, "i") },
+      _id: { $in: hotel },
     });
     res.json(hotels).status(200);
   } catch (err) {
