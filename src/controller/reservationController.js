@@ -24,20 +24,19 @@ module.exports.getMyReservations = async (req, res) => {
   try {
     const { role, id } = req.user;
     if (role !== "hotel manager") {
-      return res
-        .status(403)
-        .json({ message: "You are not allowed to see reservations" });
+      return res.status(403).json({ message: "You are not allowed to see reservations" });
     }
 
     const reservations = await Reservations.find({ hotel: id })
       .populate("customer")
       .populate("room");
-
+    
     res.status(200).json(reservations);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 module.exports.reserveRoom = async (req, res, next) => {
   const tx_ref = await chapa.generateTransactionReference();
