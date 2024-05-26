@@ -28,7 +28,7 @@ module.exports.chapaPayment = async (req, res, next) => {
       tx_ref: tx_ref,
       currency: "ETB",
       callback_url:
-        "https://tripmate-tourism-management.onrender.com/reservation/confirm-payment",
+        "https://web-tourism-management-backend-final.onrender.com/reservation/confirm-payment",
       return_url: "http://localhost:5173/thanks",
       "subaccounts[id]": sub_id,
     };
