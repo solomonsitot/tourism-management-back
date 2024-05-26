@@ -22,18 +22,20 @@ module.exports.getAllReservations = async (req, res) => {
 
 module.exports.getMyReservations = async (req, res) => {
   try {
-    // const { role, id, status } = req.user;
     const { role, id } = req.user;
-    if (role != "hotel manager") {
-      return res.json({ message: "you are not allowed to see reservations" });
+    if (role !== "hotel manager") {
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to see reservations" });
     }
-    // if (status != "verified") {
-    //   return res.json({ message: "you must be verified to see reservations" });
-    // }
-    const reservations = await Reservations.find({ hotel: id });
-    res.json(reservations).status(200);
+
+    const reservations = await Reservations.find({ hotel: id })
+      .populate("customer")
+      .populate("room");
+
+    res.status(200).json(reservations);
   } catch (err) {
-    res.json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
