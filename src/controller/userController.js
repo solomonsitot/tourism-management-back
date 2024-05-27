@@ -9,6 +9,8 @@ const sendEmail = require("../utils/sendEmail");
 const ProviderProfile = require("../models/providerProfileModel");
 const TouristProfile = require("../models/touristProfileModel");
 const Reservations = require("../models/reservationModel");
+const Subscriptions = require("../models/subscriptionModel");
+
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 module.exports.signup = async (req, res) => {
@@ -226,7 +228,17 @@ module.exports.getLoginStatus = async (req, res) => {
 };
 module.exports.getCounts = async (req, res) => {
   try {
-    // const totalCash = await Reservations.find({status:'completed'}).select()
+    const totalreservationCash = await Reservations.aggregate([
+      { $match: { status: "completed" } },
+      { $group: { _id: null, total: { $sum: "$price" } } },
+    ]);
+
+    const totalsubscriptionCash = await Subscriptions.aggregate([
+      { $match: { status: "completed" } },
+      { $group: { _id: null, total: { $sum: "$price" } } },
+    ]);
+    const totalCash = totalreservationCash + totalsubscriptionCash;
+    const sum = totalCash.length > 0 ? totalCash[0].total : 0;
     const hotelCount = await User.countDocuments({ role: "hotel manager" });
     const agentCount = await User.countDocuments({ role: "tour guide" });
     const shopCount = await User.countDocuments({ role: "shop owner" });
@@ -248,6 +260,7 @@ module.exports.getCounts = async (req, res) => {
         tourists: touristCount,
         providers: providersCount,
         banned: bannedCount,
+        total: sum,
       },
     });
   } catch (error) {
