@@ -1,5 +1,6 @@
 const Reservations = require("../models/reservationModel");
 const Rooms = require("../models/hotelRoomModel");
+const User = require("../models/userModel");
 var crypto = require("crypto");
 const { Chapa } = require("chapa-nodejs");
 
@@ -24,9 +25,11 @@ module.exports.getMyReservations = async (req, res) => {
   try {
     const { role, id } = req.user;
     console.log("User Info:", req.user);
-    
+
     if (role !== "hotel manager") {
-      return res.status(403).json({ message: "You are not allowed to see reservations" });
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to see reservations" });
     }
 
     const reservations = await Reservations.find({ hotel: id })
@@ -44,7 +47,6 @@ module.exports.getMyReservations = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 module.exports.reserveRoom = async (req, res, next) => {
   const tx_ref = await chapa.generateTransactionReference();
