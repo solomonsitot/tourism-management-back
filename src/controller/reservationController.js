@@ -1,8 +1,8 @@
 const Reservations = require("../models/reservationModel");
 const Rooms = require("../models/hotelRoomModel");
-const User = require("../models/userModel");
 var crypto = require("crypto");
 const { Chapa } = require("chapa-nodejs");
+const User = require("../models/userModel");
 
 const chapa = new Chapa({
   secretKey: process.env.CHAPA_SECRET_KEY,
