@@ -34,9 +34,9 @@ module.exports.getSinglePackage = async (req, res) => {
   try {
     const { id } = req.params;
     const tour = await Tours.findById(id);
-    res.json({ tour }).status(200);
+    res.json(tour).status(200);
   } catch (err) {
-    res.json({ gmessage: err.message });
+    res.json({ message: err.message });
   }
 };
 
@@ -114,7 +114,8 @@ module.exports.updatePackage = async (req, res) => {
   try {
     const { role, id } = req.user;
     const pid = req.params.id;
-    const { package_name, package_price, total_space, package_description } = req.body;
+    const { package_name, package_price, total_space, package_description } =
+      req.body;
     const files = req.files;
 
     // Ensure you have the current tour information
@@ -125,7 +126,9 @@ module.exports.updatePackage = async (req, res) => {
 
     // Check if the user has permission to update the tour
     if (tour.agent.toString() !== id) {
-      return res.status(403).json({ message: "You are only allowed to update your Tours" });
+      return res
+        .status(403)
+        .json({ message: "You are only allowed to update your Tours" });
     }
 
     // Initialize image URLs
@@ -135,15 +138,21 @@ module.exports.updatePackage = async (req, res) => {
 
     // Process new images if uploaded
     if (files.image1) {
-      const image1Upload = await cloudinary.uploader.upload(files.image1[0].path);
+      const image1Upload = await cloudinary.uploader.upload(
+        files.image1[0].path
+      );
       image1URL = image1Upload.secure_url;
     }
     if (files.image2) {
-      const image2Upload = await cloudinary.uploader.upload(files.image2[0].path);
+      const image2Upload = await cloudinary.uploader.upload(
+        files.image2[0].path
+      );
       image2URL = image2Upload.secure_url;
     }
     if (files.image3) {
-      const image3Upload = await cloudinary.uploader.upload(files.image3[0].path);
+      const image3Upload = await cloudinary.uploader.upload(
+        files.image3[0].path
+      );
       image3URL = image3Upload.secure_url;
     }
 
@@ -163,7 +172,6 @@ module.exports.updatePackage = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
 
 module.exports.deletePackage = async (req, res) => {
   try {
