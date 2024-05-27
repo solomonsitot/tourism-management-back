@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-
+const Users = require("./userModel");
+const Rooms = require("./hotelRoomModel");
 const reservationSchema = new mongoose.Schema({
   hotel: {
     type: mongoose.Schema.Types.ObjectId,
