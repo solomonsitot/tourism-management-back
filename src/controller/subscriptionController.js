@@ -41,7 +41,8 @@ module.exports.subscribePackage = async (req, res, next) => {
   const tx_ref = await chapa.generateTransactionReference();
   try {
     const { role, id } = req.user;
-    const { tid, quantity } = req.body;
+    const { tid } = req.params;
+    const { quantity } = req.body;
     if (role != "tourist") {
       return res.json({ message: "you are not allowed to reserve room" });
     }
