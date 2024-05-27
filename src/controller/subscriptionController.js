@@ -63,6 +63,8 @@ module.exports.subscribePackage = async (req, res, next) => {
       customer: id,
       tx_ref: tx_ref,
       quantity: quantity,
+      price:
+        quantity * tour.package_price + 0.02 * quantity * tour.package_price,
       status: "pending for payment",
     };
     await Subscriptions.create(subscription);

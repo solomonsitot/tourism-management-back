@@ -8,6 +8,7 @@ const Token = require("../models/tokenModel");
 const sendEmail = require("../utils/sendEmail");
 const ProviderProfile = require("../models/providerProfileModel");
 const TouristProfile = require("../models/touristProfileModel");
+const Reservations = require("../models/reservationModel");
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 module.exports.signup = async (req, res) => {
@@ -225,6 +226,7 @@ module.exports.getLoginStatus = async (req, res) => {
 };
 module.exports.getCounts = async (req, res) => {
   try {
+    // const totalCash = await Reservations.find({status:'completed'}).select()
     const hotelCount = await User.countDocuments({ role: "hotel manager" });
     const agentCount = await User.countDocuments({ role: "tour guide" });
     const shopCount = await User.countDocuments({ role: "shop owner" });
@@ -389,4 +391,3 @@ module.exports.getSingleHotel = async (req, res) => {
     res.json({ message: err.message });
   }
 };
-

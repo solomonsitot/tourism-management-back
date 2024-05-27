@@ -72,6 +72,7 @@ module.exports.reserveRoom = async (req, res, next) => {
       to: to,
       tx_ref: tx_ref,
       quantity: quantity,
+      price: quantity * room.room_price + 0.02 * quantity * room.room_price,
       status: "pending for payment",
     };
     await Reservations.create(reservation);

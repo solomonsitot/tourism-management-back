@@ -23,6 +23,10 @@ const subscriptionSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  price: {
+    type: Number,
+    required: true,
+  },
   status: {
     type: String,
   },
