@@ -40,6 +40,16 @@ module.exports.getSinglePackage = async (req, res) => {
   }
 };
 
+module.exports.getAllToursOfOneAgent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tours = await Tours.find({ agent: id });
+    res.json(tours).status(200);
+  } catch (err) {
+    res.json({ message: err.message });
+  }
+};
+
 module.exports.getMyPackages = async (req, res) => {
   try {
     const { role, id } = req.user;

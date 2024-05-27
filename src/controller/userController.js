@@ -389,3 +389,4 @@ module.exports.getSingleHotel = async (req, res) => {
     res.json({ message: err.message });
   }
 };
+
