@@ -25,12 +25,16 @@ module.exports.getMySubscriptions = async (req, res) => {
     // const { role, id, status } = req.user;
     const { role, id } = req.user;
     if (role != "tour guide") {
-      return res.json({ message: "you are not allowed to see Subscriptions" });
+      return res
+        .status(403)
+        .json({ message: "you are not allowed to see Subscriptions" });
     }
     // if (status != "verified") {
     //   return res.json({ message: "you must be verified to see Subscriptions" });
     // }
-    const subscriptions = await Subscriptions.find({ agency: id });
+    const subscriptions = await Subscriptions.find({ agency: id })
+      .populate("customer")
+      .populate("package");
     res.json(subscriptions).status(200);
   } catch (err) {
     res.json({ message: err.message });
