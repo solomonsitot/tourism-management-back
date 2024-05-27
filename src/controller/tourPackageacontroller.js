@@ -34,9 +34,9 @@ module.exports.getSinglePackage = async (req, res) => {
   try {
     const { id } = req.params;
     const tour = await Tours.findById(id);
-    res.json({ message: tour }).status(200);
+    res.json({ tour }).status(200);
   } catch (err) {
-    res.json({ message: err.message });
+    res.json({ gmessage: err.message });
   }
 };
 
