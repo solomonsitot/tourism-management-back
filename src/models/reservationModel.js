@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-const Users = require("./userModel");
+const User = require("./userModel");
 const Rooms = require("./hotelRoomModel");
 const reservationSchema = new mongoose.Schema({
   hotel: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "Users",
+    ref: "User",
   },
   room: {
     type: mongoose.Schema.Types.ObjectId,
@@ -14,7 +14,7 @@ const reservationSchema = new mongoose.Schema({
   },
   customer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Users",
+    ref: "User",
   },
   tx_ref: {
     type: String,
