@@ -16,6 +16,7 @@ const {
   logout,
   getLoginStatus,
   getCounts,
+  searchAgent,
 } = require("../controller/userController");
 const auth_mw = require("../middleware/auth_mw");
 
@@ -24,11 +25,12 @@ const router = express.Router();
 router.post("/signup", signup);
 router.post("/login", Login);
 router.get("/logout", logout);
-router.get('/count-all', getCounts);
+router.get("/count-all", getCounts);
 router.post("/change-password", auth_mw, auth_mw, changePassword);
 router.post("/forgot-password", forgotPassword);
 router.put("/reset-password:resetToken", resetPassword);
 router.get("/search-hotel/:key?", searchHotel);
+router.get("/search-agent/:key?", searchAgent);
 router.get("/get-user-status", getLoginStatus);
 router.get("/get-single-hotel/:id?", getSingleHotel);
 router.get("/get-all-users/", auth_mw, getAllUsers);

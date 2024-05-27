@@ -95,7 +95,6 @@ module.exports.logout = async (req, res) => {
   });
 };
 
-
 module.exports.changePassword = async (req, res) => {
   try {
     const id = req.user.id;
@@ -366,6 +365,21 @@ module.exports.searchHotel = async (req, res) => {
     res.json({ message: err.message });
   }
 };
+
+module.exports.searchAgent = async (req, res) => {
+  try {
+    const { key } = req.params;
+    const agent = await User.find({ role: "tour guide" }).select("_id");
+    const agents = await ProviderProfile.find({
+      company_name: { $regex: new RegExp(key, "i") },
+      _id: { $in: agent },
+    });
+    res.json(agents).status(200);
+  } catch (err) {
+    res.json({ message: err.message });
+  }
+};
+
 module.exports.getSingleHotel = async (req, res) => {
   try {
     const { id } = req.params;
