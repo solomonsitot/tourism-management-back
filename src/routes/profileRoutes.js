@@ -34,22 +34,36 @@ router.post(
 
 router.put(
   "/update-provider-credential",
-  // auth_mw,
-  upload.fields([
-    { name: "profile_image", maxCount: 1 },
-    { name: "image1", maxCount: 1 },
-    { name: "image2", maxCount: 1 },
-    { name: "image3", maxCount: 1 },
-  ]),
+  auth_mw,
+  upload.single("profile_image"),
   updateProviderCredential
 );
 
+module.exports = router;
+
+// router.put(
+//   "/update-provider-credential",
+//   auth_mw,
+//   // upload.fields([
+//   //   { name: "profile_image", maxCount: 1 },
+//   //   { name: "image1", maxCount: 1 },
+//   //   { name: "image2", maxCount: 1 },
+//   //   { name: "image3", maxCount: 1 },
+//   // ]),
+//   upload.single("profile_image"),
+//   updateProviderCredential
+// );
+
+
 router.put(
   "/update-tourist-credential",
-  // auth_mw,
-  upload.single("profile_image"),
+  auth_mw,
+  upload.single('profile_image'),
   updateTouristCredential
 );
+
+module.exports = router;
+
 // router.get("/get-tourist-credential/:id?", getTouristCredential);
 // router.get("/get-provider-credential/:id?", getProviderCredential);
 router.get("/get-credential", auth_mw, getCredential);

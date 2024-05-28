@@ -204,7 +204,7 @@ module.exports.rateRoom = async (req, res) => {
       return res.json({ message: "room does not exist" });
     }
     room.room_rate.total += rate;
-    room.rate.value = room.room_rate.total / (room.room_rate.rater_number + 1);
+    room.room_rate.value = room.room_rate.total / (room.room_rate.rater_number + 1);
     room.room_rate.rater_number += 1;
     await room.save();
     return res.json({ body: room }).status(200);

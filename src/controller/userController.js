@@ -103,7 +103,7 @@ module.exports.changePassword = async (req, res) => {
     const id = req.user.id;
     const { old_password, re_password, new_password } = req.body;
     if (!old_password || !re_password || !new_password) {
-      res.json({ message: "all fields are required" });
+      return res.json({ message: "all fields are required" });
     }
     if (!id) {
       return res.json({ message: "not authorized" });
@@ -123,7 +123,7 @@ module.exports.changePassword = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
-    return res.json({ message: user });
+    return res.json({ message: "password changed successfully", body: user });
   } catch (err) {
     res.json({ message: err.message });
   }
@@ -131,6 +131,7 @@ module.exports.changePassword = async (req, res) => {
 
 module.exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
+  console.log(email)
   if (!emailRegex.test(email)) {
     return res.status(400).json({ message: "Invalid email address" });
   }
@@ -215,6 +216,7 @@ module.exports.resetPassword = async (req, res) => {
     message: "Password Reset Successful, Please Login",
   });
 };
+
 module.exports.getLoginStatus = async (req, res) => {
   const token = req.cookies.token;
   if (!token) {
@@ -228,17 +230,23 @@ module.exports.getLoginStatus = async (req, res) => {
 };
 module.exports.getCounts = async (req, res) => {
   try {
-    const totalreservationCash = await Reservations.aggregate([
+    const totalReservationCash = await Reservations.aggregate([
       { $match: { status: "completed" } },
       { $group: { _id: null, total: { $sum: "$price" } } },
     ]);
 
-    const totalsubscriptionCash = await Subscriptions.aggregate([
+    const totalSubscriptionCash = await Subscriptions.aggregate([
       { $match: { status: "completed" } },
       { $group: { _id: null, total: { $sum: "$price" } } },
     ]);
-    const totalCash = totalreservationCash + totalsubscriptionCash;
-    const sum = totalCash.length > 0 ? totalCash[0].total : 0;
+
+    // Ensure that total is zero if the aggregation result is empty
+    const reservationTotal =
+      totalReservationCash.length > 0 ? totalReservationCash[0].total : 0;
+    const subscriptionTotal =
+      totalSubscriptionCash.length > 0 ? totalSubscriptionCash[0].total : 0;
+    const totalCash = reservationTotal + subscriptionTotal;
+
     const hotelCount = await User.countDocuments({ role: "hotel manager" });
     const agentCount = await User.countDocuments({ role: "tour guide" });
     const shopCount = await User.countDocuments({ role: "shop owner" });
@@ -260,10 +268,11 @@ module.exports.getCounts = async (req, res) => {
         tourists: touristCount,
         providers: providersCount,
         banned: bannedCount,
-        total: sum,
+        total: totalCash,
       },
     });
   } catch (error) {
+    console.error("Error fetching counts:", error); // Add logging
     res.status(500).json({
       success: false,
       message: "Failed to fetch counts",
@@ -271,6 +280,7 @@ module.exports.getCounts = async (req, res) => {
     });
   }
 };
+
 module.exports.userInfo = async (req, res) => {
   try {
     const id = req.user.id;
