@@ -131,7 +131,7 @@ module.exports.changePassword = async (req, res) => {
 
 module.exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
-  console.log(email)
+  // console.log(email)
   if (!emailRegex.test(email)) {
     return res.status(400).json({ message: "Invalid email address" });
   }
@@ -189,7 +189,7 @@ module.exports.forgotPassword = async (req, res) => {
 module.exports.resetPassword = async (req, res) => {
   const { password, re_password } = req.body;
   const { resetToken } = req.params;
-
+  console.log(password);
   const hashedToken = crypto
     .createHash("sha256")
     .update(resetToken)
@@ -211,6 +211,8 @@ module.exports.resetPassword = async (req, res) => {
   // Find user
   const user = await User.findOne({ _id: userToken.userId });
   user.password = password;
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(user.password, salt);
   await user.save();
   res.status(200).json({
     message: "Password Reset Successful, Please Login",
