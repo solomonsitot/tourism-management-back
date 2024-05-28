@@ -160,7 +160,7 @@ module.exports.forgotPassword = async (req, res) => {
     createdAt: Date.now(),
     expiresAt: Date.now() + 15 * (60 * 1000), // Thirty minutes
   }).save();
-  const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
   const message = `
   <h2>Hello ${user.full_name}</h2>
